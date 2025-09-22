@@ -1,0 +1,79 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant threadMain.main order 10
+participant a order 20
+participant a.local order 30
+participant b order 31
+participant b.local order 32
+participant Data order 40
+participant OUT order 5
+
+
+activate threadMain.main
+'Thread a
+threadMain.main -> a: Constructor (*22)
+a->a.local: (*22)
+threadMain.main -> a: a.Start
+activate a
+a -> OUT: Print(Start + name)
+
+'Thread b
+threadMain.main -> b: Constructor (*33)
+b->b.local: (*33)
+threadMain.main -> b: b.Start
+activate b
+b -> OUT: Print(Start + name)
+
+'a sets Data
+a -> Data: setStaticThreadperson(*22)
+activate Data
+Data -> Data: save (name*22)
+Data -> Data: save (Phone*22)
+deactivate a
+
+'b sets Data
+b -> Data: setStaticThreadperson(*33)
+Data -> Data: save (name*33)
+Data -> Data: save (Phone*33)
+
+
+threadMain.main -> Data++: getStaticThreadperson
+return Current_Data
+threadMain.main -> OUT: Print(Status is mixed *22 with *33)
+
+Data -> Data: save (Cell*33)
+Data -> Data: save (Email*33)
+
+deactivate b
+
+note left
+  Thread b completed
+end note
+||30||
+
+threadMain.main -> Data++: getStaticThreadperson
+return Current_Data
+threadMain.main -> OUT: Print(Status is mixed *22 with *33)
+
+
+
+activate a
+Data -> Data: save (Cell*22)
+note right
+  Now Thread a continues
+end note
+Data -> Data: save (Email*22)
+
+deactivate Data
+deactivate a
+
+
+threadMain.main -> Data++: getStaticThreadperson
+return Current_Data
+threadMain.main -> OUT: Print(Status is mixed *22 with *33)
+
+
+@enduml

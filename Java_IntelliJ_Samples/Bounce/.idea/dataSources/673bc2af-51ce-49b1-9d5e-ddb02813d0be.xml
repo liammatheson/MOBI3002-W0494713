@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="Bounce">
+  <database-model serializer="dbm" dbms="HSQLDB" family-id="HSQLDB" format-version="4.53">
+    <root id="1">
+      <ServerVersion>2.7.0</ServerVersion>
+    </root>
+    <database id="2" parent="1" name="PUBLIC">
+      <Current>1</Current>
+    </database>
+    <schema id="3" parent="2" name="INFORMATION_SCHEMA"/>
+    <schema id="4" parent="2" name="PUBLIC">
+      <Current>1</Current>
+      <LastIntrospectionLocalTimestamp>2024-11-03.18:10:09</LastIntrospectionLocalTimestamp>
+    </schema>
+    <schema id="5" parent="2" name="SYSTEM_LOBS"/>
+    <table id="6" parent="4" name="SAMPLE_TABLE"/>
+    <column id="7" parent="6" name="ID">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <SequenceIdentity>null</SequenceIdentity>
+      <StoredType>INTEGER|4s</StoredType>
+    </column>
+    <column id="8" parent="6" name="STR_COL">
+      <Position>2</Position>
+      <StoredType>VARCHAR(256)|12s</StoredType>
+    </column>
+    <column id="9" parent="6" name="NUM_COL">
+      <Position>3</Position>
+      <StoredType>INTEGER|4s</StoredType>
+    </column>
+    <index id="10" parent="6" name="SYS_PK_10093">
+      <ColNames>ID</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="11" parent="6" name="SYS_PK_10093">
+      <ColNames>ID</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>

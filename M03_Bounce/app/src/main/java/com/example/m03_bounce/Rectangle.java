@@ -1,8 +1,11 @@
 package com.example.m03_bounce;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.util.Random;
 
@@ -12,7 +15,8 @@ import java.util.Random;
  */
 public class Rectangle {
 
-    float radius = 50;      // Ball's radius
+    float height = 75;
+    float width = 100;
     float x;                // Ball's center (x,y)
     float y;
     float speedX;           // Ball's speed
@@ -39,8 +43,8 @@ public class Rectangle {
         paint.setColor(color);
 
         // random position and speed
-        x = radius + r.nextInt(800);
-        y = radius + r.nextInt(800);
+        x = height + width + r.nextInt(800);
+        y = height + width + r.nextInt(800);
         speedX = r.nextInt(10) - 5;
         speedY = r.nextInt(10) - 5;
     }
@@ -68,25 +72,61 @@ public class Rectangle {
         speedY += ay;
 
         // Detect collision and react
-        if (x + radius > box.xMax) {
+        if (x + width/2 > box.xMax) {
             speedX = -speedX;
-            x = box.xMax - radius;
-        } else if (x - radius < box.xMin) {
+            x = box.xMax - width/2;
+        } else if (x - width/2 < box.xMin) {
             speedX = -speedX;
-            x = box.xMin + radius;
+            x = box.xMin + width/2;
         }
-        if (y + radius > box.yMax) {
+        if (y + height/2 > box.yMax) {
             speedY = -speedY;
-            y = box.yMax - radius;
-        } else if (y - radius < box.yMin) {
+            y = box.yMax - height/2;
+        } else if (y - height/2 < box.yMin) {
             speedY = -speedY;
-            y = box.yMin + radius;
+            y = box.yMin + height/2;
         }
     }
 
-    public void draw_rectangle(Canvas canvas) {
-        bounds.set(x - radius, y - radius, x + radius, y + radius);
-        canvas.drawRect(bounds, paint);
+    public boolean isCollidingWith(Rectangle other) { // rectangle on rectangle
+        return !(this.x + this.width/2 < other.x - other.width/2 ||
+                this.x - this.width/2 > other.x + other.width/2 ||
+                this.y + this.height/2 < other.y - other.height/2 ||
+                this.y - this.height/2 > other.y + other.height/2);
     }
+
+    public boolean isCollidingWith(Square other) { // rectangle on square
+        return !(this.x + this.width/2 < other.x - other.radius ||
+                this.x - this.width/2 > other.x + other.radius ||
+                this.y + this.height/2 < other.y - other.radius ||
+                this.y - this.height/2 > other.y + other.radius);
+    }
+
+    public boolean isCollidingWith(Ball other) { // rectangle on circle
+        return !(this.x + this.width/2 < other.x - other.radius ||
+                this.x - this.width/2 > other.x + other.radius ||
+                this.y + this.height/2 < other.y - other.radius ||
+                this.y - this.height/2 > other.y + other.radius);
+    }
+//    public void draw_rectangle(Canvas canvas) {
+//        bounds.set(x - width/2, y - height/2, x + width/2, y + height/2);
+//        canvas.drawRect(bounds, paint);
+//    }
+
+    private Bitmap bitmap;
+
+    public Rectangle(Context context, int resId, float x, float y, float speedX, float speedY) {
+        this.x = x;
+        this.y = y;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dvd);
+    }
+
+
+    public void draw_rectangle(Canvas canvas) {
+        canvas.drawBitmap(bitmap, x - bitmap.getWidth()/2, y - bitmap.getHeight()/2, null);
+    }
+
 
 }

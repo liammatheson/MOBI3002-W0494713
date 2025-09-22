@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant threadMain.main order 10
+participant a order 20
+participant a.local order 30
+participant Data order 40
+participant OUT order 50
+
+
+
+activate threadMain.main
+threadMain.main -> a: Constructor (*22)
+a->a.local: (*22)
+
+threadMain.main -> a: Start
+activate a
+
+a -> OUT: Print(Start + name)
+loop 10 times
+a -> Data: setStaticThreadperson(*22)
+activate Data
+Data -> Data: save (name)
+'Data -> Data: sleep
+Data -> Data: save (Phone)
+'Data -> Data: sleep
+Data -> Data: save (Cell)
+'Data -> Data: sleep
+Data -> Data: save (Email)
+'Data -> Data: sleep
+end
+deactivate Data
+deactivate a
+
+loop 10 times
+threadMain.main -> Data++: getStaticThreadperson
+return Current_Data
+threadMain.main -> OUT: Print(Status)
+end
+
+@enduml
