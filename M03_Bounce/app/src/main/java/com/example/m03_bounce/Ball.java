@@ -54,8 +54,8 @@ public class Ball {
         // use parameter position and speed
         this.x = x;
         this.y = y;
-        this.speedX = speedX -10; // super fast super slow
-        this.speedY = speedY -10;
+        this.speedX = speedX / 100; // super fast super slow
+        this.speedY = speedY / 100;
     }
 
     public void moveWithCollisionDetection(Box box) {
