@@ -9,11 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.Executor;
 
 
 /**
@@ -21,7 +18,7 @@ import java.util.concurrent.Executor;
  */
 public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 250;
     public static final String DATABASE_NAME = "DB_Name.db";
 
     // If you change the database schema, you must increment the database version.
@@ -29,12 +26,25 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
     private static final String TEXT_TYPE = " TEXT";
     private static final String NUM_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
-    private static final String _ID = "_ID";
-    private static final String _COL_1 = "str_col";
-    private static final String _COL_2 = "num_col";
+    private static final String _ID = "id";
+
+
+
+    private static final String _COL_NAME = "name_col";
+    private static final String _COL_TYPE = "type_col";
+    private static final String _COL_PKDEX = "dex_col";
+    private static final String _COL_DESC = "desc_col";
+    private static final String  _COL_ACCESS =  "access_col";
 
     private static final String SQL_CREATE_TABLE =
-            "CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, str_col VARCHAR(256), num_col INTEGER)";
+            "CREATE TABLE " + TABLE_NAME + " (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "name_col TEXT, " +
+                    "type_col TEXT, " +
+                    "dex_col INTEGER, " +
+                    "desc_col TEXT, " +
+                    "access_col INTEGER)";
+
     private static final String SQL_DELETE_TABLE =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
@@ -53,17 +63,15 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         db.execSQL(SQL_CREATE_TABLE);
         Log.d("DBClass", "DB onCreate()");
 
-//        // Old code with embedded SQL
-//        db.execSQL("CREATE TABLE sample_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, str_col VARCHAR(256), num_col INTEGER)");
-//
-        db.execSQL(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Ford Russy', 100)");
-        db.execSQL(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Toyota', 200)");
-        db.execSQL(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('Honda', 300)");
-        db.execSQL(
-                "INSERT INTO sample_table(str_col,num_col) VALUES('GM', 400)");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Bulbasaur','Grass/Poison',1,'Seed Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Ivysaur','Grass/Poison',2,'Seed Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Venusaur','Grass/Poison',3,'Seed Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Charmander','Fire',4,'Lizard Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Charmeleon','Fire',5,'Flame Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Charizard','Fire/Flying',6,'Flame Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Squirtle','Water',7,'Tiny Turtle Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Wartortle','Water',8,'Turtle Pokemon',0);");
+        db.execSQL("INSERT INTO sample_table(name_col,type_col,dex_col,desc_col,access_col) VALUES('Blastoise','Water',9,'Shellfish Pokemon',0);");
     }
 
     @Override
@@ -87,35 +95,26 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
     @Override
     public int save(DataModel dataModel) {
-        //String command = "INSERT INTO CarModels(str_col,num_col) VALUES('" + carModel.getModelName() + "', " + carModel.getModelNumber() + ")";
-
         Log.v("DBClass", "add=>  " + dataModel.toString());
 
-        // 1. get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // 2. create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(_COL_1, dataModel.getModelName());
-        values.put(_COL_2, dataModel.getModelNumber());
+        values.put(_COL_NAME, dataModel.getModelName());
+        values.put(_COL_TYPE, dataModel.getType());
+        values.put(_COL_PKDEX, dataModel.getDexNum());
+        values.put(_COL_DESC, dataModel.getDesc());
+        values.put(_COL_ACCESS, dataModel.getAccess());
 
-        // 3. insert
-        db.insert(TABLE_NAME, // table
-                null, //nullColumnHack
-                values); // key/value -> keys = column names/ values = column values
+        long rowId = db.insert(TABLE_NAME, null, values);
+        dataModel.setId(rowId);  // set the id in your DataModel
 
-        //
-        //db.execSQL("update .......");
-
-
-        // 4. close
         db.close();
 
-        // debug output to see what we're doing
-        dump();
 
         return 0;
     }
+
 
     @Override
     public int update(DataModel dataModel) {
@@ -129,34 +128,35 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
     private Random r = new Random();
     // Add Sample rows
-    private void addDefaultRows(){
-        // Call count once
-        int doCount = this.count();
-        if (doCount > 1) {
-            Log.v("DBClass", "already rows in DB");
-
-        } else {
-            Log.v("DBClass", "no rows in DB...add some");
-            DataModel a = new DataModel(1, "Ford", 101);
-            this.save(a);
-            a = new DataModel(2, "GM", 201);
-            this.save(a);
-            a = new DataModel(3, "Tesla", 301);
-            this.save(a);
-            a = new DataModel(4, "Toyota", 401);
-            this.save(a);
-        }
-
-        DataModel a = new DataModel(1, "Rusty Bucket", r.nextInt(500));
-        this.save(a);
-    }
+//    private void addDefaultRows(){
+//        // Call count once
+//        int doCount = this.count();
+//        if (doCount > 1) {
+//            Log.v("DBClass", "already rows in DB");
+//
+//        }
+//        else {
+//            Log.v("DBClass", "no rows in DB...add some");
+//            DataModel a = new DataModel(1, "Ford", 101);
+//            this.save(a);
+//            a = new DataModel(2, "GM", 201);
+//            this.save(a);
+//            a = new DataModel(3, "Tesla", 301);
+//            this.save(a);
+//            a = new DataModel(4, "Toyota", 401);
+//            this.save(a);
+//        }
+//
+//        DataModel a = new DataModel(1, "Rusty Bucket", r.nextInt(500));
+//        this.save(a);
+//    }
 
     @Override
     public List<DataModel> findAll() {
         List<DataModel> temp = new ArrayList<DataModel>();
 
         // if no rows, add
-        addDefaultRows();
+//        addDefaultRows();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE_NAME;
@@ -167,12 +167,39 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
         // 3. go over each row, build and add it to list
         DataModel item;
+
+
+        String favQuery = "SELECT * FROM " + TABLE_NAME + " ORDER BY access_col DESC LIMIT 1";
+        Cursor cursorFav = db.rawQuery(favQuery, null);
+        if (cursorFav.moveToFirst()) {
+            DataModel mostAccessedPKMN = new DataModel(
+                    cursorFav.getLong(0),
+                    cursorFav.getString(1),
+                    cursorFav.getString(2),
+                    cursorFav.getInt(3),
+                    cursorFav.getString(4),
+                    cursorFav.getInt(5)
+            );
+            temp.add(mostAccessedPKMN);
+        }
+        cursorFav.close();
+
+
         if (cursor.moveToFirst()) {
             do {
                 // This code puts a dataModel object into the PlaceHolder for the fragment
                 // if you had more columns in the DB, you'd format  them in the non-details
                 // list here
-                item = new DataModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2));
+                item = new DataModel(
+
+                        cursor.getLong(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getInt(3),
+                        cursor.getString(4),
+                        cursor.getInt(5)
+                        );
+
                 temp.add(item);
             } while (cursor.moveToNext());
         }
@@ -208,7 +235,7 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         Log.v("DBClass", "id = " + id);
         // update sample_table set num_col = num_col + 1 where id=1;
 
-        String cmdString = "update " + TABLE_NAME + " set num_col = num_col + 1 where id="+id;
+        String cmdString = "update " + TABLE_NAME + " set access_col = access_col + 1 where id="+id;
         Log.v("DBClass", "cmdString = " + cmdString);
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -216,22 +243,5 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         db.close();
 
     }
-
-    @Override
-    public long getMostAccessed() {
-
-        // get most accessed ID from DB
-
-
-        // loop through all records to get most accessed
-        long mostID = 0;
-
-
-        return 0;
-    }
-
-    // Dump the DB as a test
-    private void dump() {
-    }  // oops, never got around to this...but findall is dump-ish
 
 }

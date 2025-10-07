@@ -34,22 +34,22 @@ import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
     surface = Blue,
-    onSurface = Navy,
-    primary = Navy,
-    onPrimary = Chartreuse
+    onSurface = PokemonGrey,
+    primary = PokemonGrey,
+    onPrimary = PokemonRed
 )
 
 private val LightColorScheme = lightColorScheme(
     surface = Red, // Blue,
     onSurface = LightBlue,
-    primary = LightRed,
-    onPrimary = Navy
+    primary = PokemonRed,
+    onPrimary = PokemonYellow
 )
 
 @Suppress("DEPRECATION")
 @Composable
 fun BasicsCodelabTheme(
-    darkTheme: Boolean = false,   //  isSystemInDarkTheme(),
+    darkTheme: Boolean = isSystemInDarkTheme(),   //  isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,  // was true
     content: @Composable () -> Unit
@@ -72,7 +72,7 @@ fun BasicsCodelabTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = PokeTypography,
         content = content
     )
 }

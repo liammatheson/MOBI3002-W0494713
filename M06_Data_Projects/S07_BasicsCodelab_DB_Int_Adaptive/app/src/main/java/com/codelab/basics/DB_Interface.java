@@ -21,6 +21,4 @@ public interface DB_Interface {
 
     public void incAccessCount(long id);
 
-    public long getMostAccessed();
-
 }

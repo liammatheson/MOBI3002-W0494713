@@ -18,11 +18,13 @@ package com.codelab.basics.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Navy = Color(0xFF073042)
+val PokemonGrey = Color(0xFF58585b)
+
+val PokemonYellow = Color(0xFFFFCB00)
 val Blue = Color(0xFF4285F4)
 val LightBlue = Color(0xFFD7EFFE)
 val Chartreuse = Color(0xFFEFF7CF)
 
 // Russ added these
 val Red = Color(0xFFFF0000)
-val LightRed = Color(0xFFFF7F7F)
+val PokemonRed = Color(0xFFF04037)

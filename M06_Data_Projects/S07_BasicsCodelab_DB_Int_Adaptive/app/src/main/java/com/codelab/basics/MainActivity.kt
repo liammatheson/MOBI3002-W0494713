@@ -236,8 +236,8 @@ private fun CardContent(
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green,
-                    contentColor = Color.Red
+                    containerColor = Color(0xFF58585b),
+                    contentColor = Color(0xFFFFCB00)
                 ),
                 onClick = {
                     updateIndex(pos);
@@ -246,10 +246,11 @@ private fun CardContent(
                         "Clicked = ${name.toString()} "
                     )
                     // call to increment access count
+                    Log.d("test button clicked", "test button clicked")
                     DBtest.incAccessCount(name.id)
                     Log.d("CodeLab_DB", "Inc Access = ${name.toString()} ")
                 })
-            { Text(text = "Details ${pos}") }
+            { Text(text = " #${pos + 1}") }
             Text(
                 // Just the name of this record
                 text = name.modelName,

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S01_Save_V01" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S01_Save_V01" />
+            <option value="$PROJECT_DIR$/S01_Save_V01/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S02_Save_V03a_DB" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S02_Save_V03a_DB" />
+            <option value="$PROJECT_DIR$/S02_Save_V03a_DB/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S03_BasicsCodelab" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S03_BasicsCodelab" />
+            <option value="$PROJECT_DIR$/S03_BasicsCodelab/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S04_BasicsCodelab_Compose" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S04_BasicsCodelab_Compose" />
+            <option value="$PROJECT_DIR$/S04_BasicsCodelab_Compose/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S05_BasicsCodelab_DB" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S05_BasicsCodelab_DB" />
+            <option value="$PROJECT_DIR$/S05_BasicsCodelab_DB/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S06_BasicsCodelab_DB_Int" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S06_BasicsCodelab_DB_Int" />
+            <option value="$PROJECT_DIR$/S06_BasicsCodelab_DB_Int/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S07_BasicsCodelab_DB_Int_Adaptive" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S07_BasicsCodelab_DB_Int_Adaptive" />
+            <option value="$PROJECT_DIR$/S07_BasicsCodelab_DB_Int_Adaptive/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S10_Bounce_DB" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S10_Bounce_DB" />
+            <option value="$PROJECT_DIR$/S10_Bounce_DB/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/S11_Bounce_DB_screen" />
+        <option name="gradleJvm" value="ms-21" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/S11_Bounce_DB_screen" />
+            <option value="$PROJECT_DIR$/S11_Bounce_DB_screen/app" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
