@@ -246,11 +246,19 @@ private fun CardContent(
                         "Clicked = ${name.toString()} "
                     )
                     // call to increment access count
-                    Log.d("test button clicked", "test button clicked")
                     DBtest.incAccessCount(name.id)
                     Log.d("CodeLab_DB", "Inc Access = ${name.toString()} ")
                 })
-            { Text(text = " #${pos + 1}") }
+
+            // making the first button say favorite
+
+            { if (pos == 0) {
+                Text(text = "Favorite")
+            } else {
+                Text(text = " #${pos}")
+            }
+            }
+
             Text(
                 // Just the name of this record
                 text = name.modelName,

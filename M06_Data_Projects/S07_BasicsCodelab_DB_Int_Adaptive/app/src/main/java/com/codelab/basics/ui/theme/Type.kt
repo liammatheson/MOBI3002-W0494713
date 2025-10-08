@@ -51,7 +51,7 @@ val Typography = Typography(
 )
 
 val PokemonFont = FontFamily(
-    Font(R.font.pokemon_solid) // TTF in res/font/pokemon_solid.ttf
+    Font(R.font.pokemon_solid)
 )
 
 val PokeTypography = Typography(

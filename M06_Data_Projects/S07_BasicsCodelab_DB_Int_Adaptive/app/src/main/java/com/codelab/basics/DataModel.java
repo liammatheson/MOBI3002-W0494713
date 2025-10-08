@@ -32,11 +32,11 @@ public class DataModel {
     @Override
     public String toString() {
         return
-                ", pkmn name ='" + getModelName() + '\'' +
-                ", pkmn type =" + getType() + '\'' +
-                ", pkmn description =" + getDesc() + '\'' +
-                ", pkmn dex number = " + getDexNum() + '\'' +
-                ", access count = " + getAccess()
+                "Name: " + getModelName() + '\n' +
+                "Type: " + getType() + '\n' +
+                "Category: " + getDesc() + '\n' +
+                "Dex No. #" + getDexNum() + '\n' +
+                "Access Count: " + getAccess()
                 ;
     }
 
