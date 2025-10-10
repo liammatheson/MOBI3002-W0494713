@@ -236,7 +236,7 @@ private fun CardContent(
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF58585b),
+                    containerColor = Color(0xFF58585b), // pokemon coloured
                     contentColor = Color(0xFFFFCB00)
                 ),
                 onClick = {

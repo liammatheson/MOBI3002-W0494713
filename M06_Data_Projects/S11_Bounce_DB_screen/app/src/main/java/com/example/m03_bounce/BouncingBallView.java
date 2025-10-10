@@ -1,6 +1,7 @@
 package com.example.m03_bounce;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -32,27 +33,18 @@ public class BouncingBallView extends View {
 
         Log.v("BouncingBallView", "Constructor BouncingBallView");
 
-        // create the box
         box = new Box(Color.BLACK);  // ARGB
-
-        //ball_1 = new Ball(Color.GREEN);
-//        balls.add(new Ball(Color.GREEN));
-//        ball_1 = balls.get(0);  // points ball_1 to the first; (zero-ith) element of list
-//        Log.w("BouncingBallLog", "Just added a bouncing ball");
-
-        //ball_2 = new Ball(Color.CYAN);
-//        balls.add(new Ball(Color.CYAN));
-//        Log.w("BouncingBallLog", "Just added another bouncing ball");
-
-        // Get from DB
         DBtest = new DBClass(context);
+
         List<DataModel> ALL = DBtest.findAll();
+
+
+        Log.w("liams test" ,"db access log");
         for (DataModel one : ALL) {
             Log.w("DataModel", "Item => " + one.toString());
-            balls.add(new Ball(Color.YELLOW, one.getModelX(),
-                    one.getModelY(), one.getModelDX(), one.getModelDY()));
-        }
+            balls.add(new Ball(one.getColor(), one.getModelX(), one.getModelY(), one.getModelDX(), one.getModelDY(), one.getName()));
 
+        }
 
         // To enable keypad
         this.setFocusable(true);
@@ -69,8 +61,6 @@ public class BouncingBallView extends View {
 
         // Draw the components
         box.draw(canvas);
-        //canvas.drawARGB(0,25,25,25);
-        //canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
         for (Ball b : balls) {
             b.draw(canvas);  //draw each ball in the list
@@ -101,65 +91,20 @@ public class BouncingBallView extends View {
         Log.w("BouncingBallLog", "onSizeChanged w=" + w + " h=" + h);
     }
 
-    // Touch-input handler
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float currentX = event.getX();
-        float currentY = event.getY();
-        float deltaX, deltaY;
-        float scalingFactor = 5.0f / ((box.xMax > box.yMax) ? box.yMax : box.xMax);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                // Modify rotational angles according to movement
-                deltaX = currentX - previousX;
-                deltaY = currentY - previousY;
-                ball_1.speedX += deltaX * scalingFactor;
-                ball_1.speedY += deltaY * scalingFactor;
-                //Log.w("BouncingBallLog", " Xspeed=" + ball_1.speedX + " Yspeed=" + ball_1.speedY);
-                Log.w("BouncingBallLog", "x,y= " + previousX + " ," + previousY + "  Xdiff=" + deltaX + " Ydiff=" + deltaY);
-                balls.add(new Ball(Color.BLUE, previousX, previousY, deltaX, deltaY));  // add ball at every touch event
-
-                // A way to clear list when too many balls
-                if (balls.size() > 20) {
-                    // leave first ball, remove the rest
-                    Log.v("BouncingBallLog", "too many balls, clear back to 1");
-                    balls.clear();
-                    balls.add(new Ball(Color.RED));
-                    ball_1 = balls.get(0);  // points ball_1 to the first (zero-ith) element of list
-                }
-
-        }
-        // Save current x, y
-        previousX = currentX;
-        previousY = currentY;
-
-        // Try this (remove other invalidate(); )
-        //this.invalidate();
-
-        return true;  // Event handled
-    }
-
-    Random rand = new Random();
-
     // called when button is pressed
-    public void RussButtonPressed() {
+    public void RussButtonPressed(int color, float x, float y, float dx, float dy, String name) {
         Log.d("BouncingBallView  BUTTON", "User tapped the  button ... VIEW");
-
-        //get half of the width and height as we are working with a circle
-        int viewWidth = this.getMeasuredWidth();
-        int viewHeight = this.getMeasuredHeight();
-
-        // make random x,y, velocity
-        int x = rand.nextInt(viewWidth);
-        int y = rand.nextInt(viewHeight);
-        int dx = 25 - rand.nextInt(50);
-        int dy = 10 - rand.nextInt(20);
-
-        balls.add(new Ball(Color.RED, x, y, dx, dy));  // add ball at every touch event
-
+        balls.add(new Ball(color, x, y, dx, dy, name));
         Log.v("BouncingBallView  BUTTON", "n...add ball to DB");
-        DataModel newBall = new DataModel(0,(float)x,(float)y,(float)dx,(float)dy);
+        DataModel newBall = new DataModel(x, y, dx, dy, color, name);
         DBtest.save(newBall);
 
+    }
+    public void clearBalls() {
+        balls.clear();
+        SQLiteDatabase db = DBtest.getWritableDatabase();
+        db.delete("sample_table", null, null); // deletes all rows
+        db.close();
+        invalidate();
     }
 }

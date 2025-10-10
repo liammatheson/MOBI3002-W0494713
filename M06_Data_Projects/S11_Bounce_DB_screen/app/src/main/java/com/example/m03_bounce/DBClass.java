@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 18;
     public static final String DATABASE_NAME = "Bounce_DB_Name.db";
 
     // If you change the database schema, you must increment the database version.
@@ -31,10 +31,12 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
     private static final String _COL_2 = "Y";
     private static final String _COL_3 = "DX";
     private static final String _COL_4 = "DY";
+    private static final String _COL_5 = "COLOR";
+    private static final String _COL_6 = "NAME";
 
     private static final String SQL_CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + " (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                    "X FLOAT, Y FLOAT, DX FLOAT, DY FLOAT)";
+                    "X FLOAT, Y FLOAT, DX FLOAT, DY FLOAT, COLOR INTEGER, NAME TEXT)";
     private static final String SQL_DELETE_TABLE =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
@@ -52,20 +54,11 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         Log.d("DBClass", "DB onCreate() " + SQL_CREATE_TABLE);
         db.execSQL(SQL_CREATE_TABLE);
         Log.d("DBClass", "DB onCreate()");
-
-//        db.execSQL("INSERT INTO " + TABLE_NAME + " (X, Y, DX, DY)    VALUES" +
-//                "(3.0, 22.1, 0.5, 0.7)," +
-//                "(132.0, 22.3, 0.5, -1.7)," +
-//                "(134.0, 122.5, 0.5, 2.7)," +
-//                "(163.0, 122.7, 0.5, -6.7)," +
-//                "(283.0, 222.9, 0.5, 4.7)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i2) {
         Log.d("DBClass", "DB onUpgrade() to version " + DATABASE_VERSION);
-        db.execSQL(SQL_DELETE_TABLE);
-        onCreate(db);
     }
 
     /////////// Implement Interface ///////////////////////////
@@ -93,6 +86,8 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         values.put(_COL_2, dataModel.getModelY());
         values.put(_COL_3, dataModel.getModelDX());
         values.put(_COL_4, dataModel.getModelDY());
+        values.put(_COL_5, dataModel.getColor());
+        values.put(_COL_6, dataModel.getName());
 
         // 3. insert
         db.insert(TABLE_NAME, // table
@@ -101,9 +96,6 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
         // 4. close
         db.close();
-
-        // debug output to see what we're doing
-        dump();
 
         return 0;
     }
@@ -118,38 +110,9 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         return 0;
     }
 
-    private Random r = new Random();
-
-//    // Add Sample rows
-//    private void addDefaultRows() {
-//        // Call count once
-//        int doCount = this.count();
-//        if (doCount > 2) {
-//            Log.v("DBClass", "already rows in DB");
-//
-//        } else {
-//            Log.v("DBClass", "n...add some rows");
-//            DataModel a = new DataModel(1, 20.0f,20.0f,-4.0f,4.0f);
-//            this.save(a);
-//            a = new DataModel(2, 30f,30f,3f,-3f);
-//            this.save(a);
-////            a = new DataModel(3, 40f,40f,1f,4f);
-////            this.save(a);
-////            a = new DataModel(4, 60f,60f,-4f,1f);
-////            this.save(a);
-//
-//        }
-
-//        DataModel a = new DataModel(1, "Rusty Bucket", r.nextInt(500));
-//        this.save(a);
-//    }
-
     @Override
     public List<DataModel> findAll() {
         List<DataModel> temp = new ArrayList<DataModel>();
-
-        // if no rows, add
-        //addDefaultRows();
 
         // 1. build the query
         String query = "SELECT  * FROM " + TABLE_NAME;
@@ -162,7 +125,7 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         DataModel item;
         if (cursor.moveToFirst()) {
             do {
-                item = new DataModel(cursor.getInt(0), cursor.getFloat(1), cursor.getFloat(2), cursor.getFloat(3), cursor.getFloat(4) );
+                item = new DataModel(cursor.getFloat(1), cursor.getFloat(2), cursor.getFloat(3), cursor.getFloat(4), cursor.getInt(5), cursor.getString(6) );
                 temp.add(item);
             } while (cursor.moveToNext());
         }
@@ -175,16 +138,7 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
 
     @Override
     public String getNameById(Long id) {
-
-
-
-
-
         return null;
     }
-
-    // Dump the DB as a test
-    private void dump() {
-    }  // oops, never got around to this...but findall is dump-ish
 
 }

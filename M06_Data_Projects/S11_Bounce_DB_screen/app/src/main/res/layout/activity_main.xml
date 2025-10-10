@@ -16,54 +16,102 @@
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent" />
 
+
     <Button
         android:id="@+id/button_russ"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onRussButtonClick"
-        android:text="Russ Button"
+        android:text="Add"
         custom:layout_constraintBottom_toBottomOf="parent"
         custom:layout_constraintEnd_toEndOf="parent"
-        custom:layout_constraintHorizontal_bias="0.491"
+        custom:layout_constraintHorizontal_bias="0.371"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent"
-        custom:layout_constraintVertical_bias="0.386" />
+        custom:layout_constraintVertical_bias="0.903" />
 
     <Button
         android:id="@+id/button_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onRussButtonClick"
+        android:onClick="onClearButtonPressed"
         android:text="Clear"
         custom:layout_constraintBottom_toBottomOf="parent"
         custom:layout_constraintEnd_toEndOf="parent"
-        custom:layout_constraintHorizontal_bias="0.529"
+        custom:layout_constraintHorizontal_bias="0.643"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent"
         custom:layout_constraintVertical_bias="0.903" />
 
-
     <SeekBar
-        android:id="@+id/seekBar_Color"
+        android:id="@+id/seekBar_Color_r"
         android:layout_width="168dp"
         android:layout_height="32dp"
-        android:layout_marginStart="140dp"
-        android:layout_marginTop="48dp"
-        android:max="10"
-        android:progress="1"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="296dp"
+        android:max="255"
+        android:progress="127"
+        android:progressTint="#eb4034"
+        android:thumbTint="#eb4034"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_Color_r"
+        android:layout_width="84dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="296dp"
+        android:text="Red="
+        android:textColor="#eb4034"
+        custom:layout_constraintStart_toStartOf="@+id/custView"
+        custom:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar_Color_g"
+        android:layout_width="168dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="348dp"
+        android:max="255"
+        android:progress="127"
         android:progressTint="#36970f"
         android:thumbTint="#36970f"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_Color"
+        android:id="@+id/textView_Color_g"
         android:layout_width="84dp"
         android:layout_height="36dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="48dp"
-        android:text="Color="
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="348dp"
+        android:text="Green="
         android:textColor="#36970f"
+        custom:layout_constraintStart_toStartOf="@+id/custView"
+        custom:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar_Color_b"
+        android:layout_width="168dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="396dp"
+        android:max="255"
+        android:progress="127"
+        android:progressTint="#3434eb"
+        android:thumbTint="#3434eb"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_Color_b"
+        android:layout_width="84dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="396dp"
+        android:text="Blue="
+        android:textColor="#3434eb"
         custom:layout_constraintStart_toStartOf="@+id/custView"
         custom:layout_constraintTop_toTopOf="parent" />
 
@@ -71,10 +119,10 @@
         android:id="@+id/seekBar_X"
         android:layout_width="168dp"
         android:layout_height="32dp"
-        android:layout_marginStart="156dp"
+        android:layout_marginStart="148dp"
         android:layout_marginTop="84dp"
         android:max="10"
-        android:progress="1"
+        android:progress="5"
         android:progressTint="#36970f"
         android:thumbTint="#36970f"
         custom:layout_constraintStart_toStartOf="parent"
@@ -98,7 +146,7 @@
         android:layout_marginStart="148dp"
         android:layout_marginTop="128dp"
         android:max="10"
-        android:progress="1"
+        android:progress="5"
         android:progressTint="#36970f"
         android:thumbTint="#36970f"
         custom:layout_constraintStart_toStartOf="parent"
@@ -121,8 +169,8 @@
         android:layout_height="32dp"
         android:layout_marginStart="148dp"
         android:layout_marginTop="172dp"
-        android:max="10"
-        android:progress="1"
+        android:max="20"
+        android:progress="10"
         android:progressTint="#36970f"
         android:thumbTint="#36970f"
         custom:layout_constraintStart_toStartOf="parent"
@@ -145,8 +193,8 @@
         android:layout_height="32dp"
         android:layout_marginStart="148dp"
         android:layout_marginTop="216dp"
-        android:max="10"
-        android:progress="1"
+        android:max="20"
+        android:progress="10"
         android:progressTint="#36970f"
         android:thumbTint="#36970f"
         custom:layout_constraintStart_toStartOf="parent"
@@ -162,6 +210,20 @@
         android:textColor="#36970f"
         custom:layout_constraintStart_toStartOf="@+id/custView"
         custom:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_ball_name"
+        android:hint="Enter ball name"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="100dp"
+        android:inputType="text"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintBottom_toTopOf="@+id/button_russ"
+        custom:layout_constraintTop_toBottomOf="@+id/textView_Color_b" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

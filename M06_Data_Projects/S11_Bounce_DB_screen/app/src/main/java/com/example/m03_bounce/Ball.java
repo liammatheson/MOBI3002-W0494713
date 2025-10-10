@@ -1,6 +1,7 @@
 package com.example.m03_bounce;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
@@ -19,34 +20,15 @@ public class Ball {
     float speedY;
     private RectF bounds;   // Needed for Canvas.drawOval
     private Paint paint;    // The paint style, color used for drawing
+    String name;
+    private Paint textPaint;
 
     // Add accelerometer
     // Add ... implements SensorEventListener
     private double ax, ay, az = 0; // acceration from different axis
 
-    public void setAcc(double ax, double ay, double az){
-        this.ax = ax;
-        this.ay = ay;
-        this.az = az;
-    }
-
-    Random r = new Random();  // seed random number generator
-
     // Constructor
-    public Ball(int color) {
-        bounds = new RectF();
-        paint = new Paint();
-        paint.setColor(color);
-
-        // random position and speed
-        x = radius + r.nextInt(800);
-        y = radius + r.nextInt(800);
-        speedX = r.nextInt(10) - 5;
-        speedY = r.nextInt(10) - 5;
-    }
-
-    // Constructor
-    public Ball(int color, float x, float y, float speedX, float speedY) {
+    public Ball(int color, float x, float y, float speedX, float speedY, String name) {
         bounds = new RectF();
         paint = new Paint();
         paint.setColor(color);
@@ -56,6 +38,12 @@ public class Ball {
         this.y = y;
         this.speedX = speedX;
         this.speedY = speedY;
+        this.name = name;
+
+        textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(30);
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     public void moveWithCollisionDetection(Box box) {
@@ -87,6 +75,9 @@ public class Ball {
     public void draw(Canvas canvas) {
         bounds.set(x - radius, y - radius, x + radius, y + radius);
         canvas.drawOval(bounds, paint);
-    }
 
+        if (name != null) { // this part draws the name below the ball
+            canvas.drawText(name, x, y + radius + 30, textPaint);
+        }
+    }
 }
