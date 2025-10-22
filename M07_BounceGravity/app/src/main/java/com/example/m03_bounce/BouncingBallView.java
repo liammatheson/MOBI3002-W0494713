@@ -1,8 +1,10 @@
 package com.example.m03_bounce;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import java.util.ArrayList;
 import java.util.Random;
+import android.graphics.Paint;
+import android.media.MediaPlayer;
+import android.graphics.Bitmap;
 
 /**
  * Created by Russ on 08/04/2014.
@@ -21,14 +26,14 @@ public class BouncingBallView extends View implements SensorEventListener {
     private ArrayList<Ball> balls = new ArrayList<Ball>(); // list of Balls
     private Ball ball_1;  // use this to reference first ball in arraylist
     private Box box;
-
-    // For touch inputs - previous touch (x, y)
-    private float previousX;
-    private float previousY;
-
     double ax = 0;   // Store here for logging to screen
     double ay = 0;   //
     double az = 0;   //
+
+    private Bitmap bumper1Bitmap, bumper2Bitmap;
+    private RectF bumper1Rect, bumper2Rect;
+
+    private RectF lose_hole;
 
     public BouncingBallView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,16 +41,7 @@ public class BouncingBallView extends View implements SensorEventListener {
         Log.v("BouncingBallView", "Constructor BouncingBallView");
 
         // create the box
-        box = new Box(Color.BLACK);  // ARGB
-
-        //ball_1 = new Ball(Color.GREEN);
-        balls.add(new Ball(Color.GREEN));
-        ball_1 = balls.get(0);  // points ball_1 to the first; (zero-ith) element of list
-        Log.w("BouncingBallLog", "Just added a bouncing ball");
-
-        //ball_2 = new Ball(Color.CYAN);
-        balls.add(new Ball(Color.CYAN));
-        Log.w("BouncingBallLog", "Just added another bouncing ball");
+        box = new Box(Color.BLACK, context, R.drawable.pinball_background);  // ARGB
 
         // To enable keypad
         this.setFocusable(true);
@@ -60,29 +56,77 @@ public class BouncingBallView extends View implements SensorEventListener {
 
         Log.v("BouncingBallView", "onDraw");
 
+        // adding losing_hole
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(lose_hole, paint);
+
         // Draw the components
         box.draw(canvas);
-        //canvas.drawARGB(0,25,25,25);
-        //canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
+
 
         for (Ball b : balls) {
             b.draw(canvas);  //draw each ball in the list
             b.moveWithCollisionDetection(box);  // Update the position of the ball
+
+            int px1 = (int)((b.x - bumper1Rect.left) * bumper1Bitmap.getWidth() / bumper1Rect.width());
+            int py1 = (int)((b.y - bumper1Rect.top) * bumper1Bitmap.getHeight() / bumper1Rect.height());
+            if (px1 >= 0 && px1 < bumper1Bitmap.getWidth() && py1 >= 0 && py1 < bumper1Bitmap.getHeight()) {
+                int pixel1 = bumper1Bitmap.getPixel(px1, py1);
+                if ((pixel1 >>> 24) != 0) {  // non-transparent
+                    b.speedY = -b.speedY;
+                    if (b.speedY > 0) {
+                        b.y = bumper1Rect.bottom + b.radius + 1;
+                    } else {
+                        b.y = bumper1Rect.top - b.radius - 1;
+                    }
+                    MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.bump);
+                    mp.start();
+
+                    canvas.drawBitmap(bumper1Bitmap, null, bumper1Rect, null);
+                    postDelayed(() -> invalidate(), 2000);
+                }
+            }
+
+            int px2 = (int)((b.x - bumper2Rect.left) * bumper2Bitmap.getWidth() / bumper2Rect.width());
+            int py2 = (int)((b.y - bumper2Rect.top) * bumper2Bitmap.getHeight() / bumper2Rect.height());
+            if (px2 >= 0 && px2 < bumper2Bitmap.getWidth() && py2 >= 0 && py2 < bumper2Bitmap.getHeight()) {
+                int pixel2 = bumper2Bitmap.getPixel(px2, py2);
+                if ((pixel2 >>> 24) != 0) {  // non-transparent
+                    b.speedY = -b.speedY;
+                    if (b.speedY > 0) {
+                        b.y = bumper2Rect.bottom + b.radius + 1;
+                    } else {
+                        b.y = bumper2Rect.top - b.radius - 1;
+                    }
+                    MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.bump);
+                    mp.start();
+
+                    canvas.drawBitmap(bumper2Bitmap, null, bumper2Rect, null);
+                    postDelayed(() -> invalidate(), 2000);
+                }
+            }
+
+            if (RectF.intersects(b.getBounds(), lose_hole)) {
+                balls.clear();
+
+                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.lose);
+                mp.start();
+
+                postDelayed(() -> { // so new ball doesnt instantly appear. give it a second.
+                    int viewWidth = getMeasuredWidth();
+                    int viewHeight = getMeasuredHeight();
+                    int x = rand.nextInt(viewWidth);
+                    int y = rand.nextInt(viewHeight);
+                    int dx = rand.nextInt(50);
+                    int dy = rand.nextInt(20);
+                    balls.add(new Ball(Color.RED, x, y, dx, dy, getContext(), R.drawable.ball));
+                }, 2000);
+            }
+
         }
 
-        // Delay on UI thread causes big problems!
-        // Simulates doing busy work or waits on UI (DB connections, Network I/O, ....)
-        //  I/Choreographer? Skipped 64 frames!  The application may be doing too much work on its main thread.
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//        }
-
-        // Check what happens if you draw the box last
-        //box.draw(canvas);
-
-        // Check what happens if you don't call invalidate (redraw only when stopped-started)
-        // Force a re-draw
         this.invalidate();
     }
 
@@ -92,44 +136,47 @@ public class BouncingBallView extends View implements SensorEventListener {
         // Set the movement bounds for the ball
         box.set(0, 0, w, h);
         Log.w("BouncingBallLog", "onSizeChanged w=" + w + " h=" + h);
-    }
 
-    // Touch-input handler
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        float currentX = event.getX();
-        float currentY = event.getY();
-        float deltaX, deltaY;
-        float scalingFactor = 5f / ((box.xMax > box.yMax) ? box.yMax : box.xMax);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
-                // Modify rotational angles according to movement
-                deltaX = currentX - previousX;
-                deltaY = currentY - previousY;
-                ball_1.speedX += deltaX * scalingFactor;
-                ball_1.speedY += deltaY * scalingFactor;
-                //Log.w("BouncingBallLog", " Xspeed=" + ball_1.speedX + " Yspeed=" + ball_1.speedY);
-                Log.w("BouncingBallLog", "x,y= " + previousX + " ," + previousY + "  Xdiff=" + deltaX + " Ydiff=" + deltaY);
-                balls.add(new Ball(Color.BLUE, previousX, previousY, deltaX, deltaY));  // add ball at every touch event
+        // losing hole. if the ball falls in you lose.
+        float holeWidth = 200;
+        float holeHeight = 50;
+        lose_hole = new RectF(
+                w/2 - holeWidth/2,   // left
+                h - holeHeight,      // top
+                w/2 + holeWidth/2,   // right
+                h                     // bottom
+        );
 
-                // A way to clear list when too many balls
-                if (balls.size() > 20) {
-                    // leave first ball, remove the rest
-                    Log.v("BouncingBallLog", "too many balls, clear back to 1");
-                    balls.clear();
-                    balls.add(new Ball(Color.RED));
-                    ball_1 = balls.get(0);  // points ball_1 to the first (zero-ith) element of list
-                }
 
-        }
-        // Save current x, y
-        previousX = currentX;
-        previousY = currentY;
+        bumper1Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bumper1);
+        bumper2Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bumper2);
 
-        // Try this (remove other invalidate(); )
-        //this.invalidate();
+        float bumperWidth = w * 0.04f;
+        float bumperHeight = h * 0.05f;
 
-        return true;  // Event handled
+        bumper1Rect = new RectF(
+                w * 0.22f,
+                h * 0.74f,
+                w * 0.29f + bumperWidth,
+                h * 0.82f + bumperHeight);
+
+        bumper2Rect = new RectF(
+                w * 0.66f,
+                h * 0.74f,
+                w * 0.74f + bumperWidth,
+                h * 0.82f + bumperHeight);
+
+        int viewWidth = this.getMeasuredWidth();
+        int viewHeight = this.getMeasuredHeight();
+
+        // make random x,y, velocity
+        int x = rand.nextInt(viewWidth);
+        int y = rand.nextInt(viewHeight);
+        int dx = rand.nextInt(50);
+        int dy = rand.nextInt(20);
+
+        balls.add(new Ball(Color.RED, x, y, dx, dy, getContext(), R.drawable.ball));  // add ball at every touch event
+
     }
 
     Random rand = new Random();
@@ -147,7 +194,7 @@ public class BouncingBallView extends View implements SensorEventListener {
         int dx = rand.nextInt(50);
         int dy = rand.nextInt(20);
 
-        balls.add(new Ball(Color.RED, x, y, dx, dy));  // add ball at every touch event
+        balls.add(new Ball(Color.RED, x, y, dx, dy, getContext(), R.drawable.ball));  // add ball at every touch event
     }
 
 
@@ -162,8 +209,10 @@ public class BouncingBallView extends View implements SensorEventListener {
             ay = event.values[1];   // y component of Accelerometer
             az = event.values[2];   // z component of Accelerometer
 
+            float scale = .4f;
+
             for (Ball b : balls) {
-                b.setAcc(ax, ay, az);  //draw each ball in the list
+                b.setAcc(ax * scale, ay * scale, az * scale);  //draw each ball in the list
             }
 
             Log.v("onSensorChanged", "ax=" + ax + " ay=" + ay + " az=" + az);
@@ -173,10 +222,6 @@ public class BouncingBallView extends View implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.v("onAccuracyChanged", "event=" + sensor.toString());
-    }
-    public void callMe() {
-        Log.v("xxxxx", "yyyyy");
-//        this.callMe();
     }
 
 }

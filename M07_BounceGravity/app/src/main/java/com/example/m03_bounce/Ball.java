@@ -4,6 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.content.Context;
+
 import java.util.Random;
 
 
@@ -12,7 +16,7 @@ import java.util.Random;
  */
 public class Ball {
 
-    double radius = 50;      // Ball's radius
+    double radius = 35;      // Ball's radius
     double x;                // Ball's center (x,y)
     double y;
     double speedX;           // Ball's speed
@@ -21,6 +25,8 @@ public class Ball {
     double acc_resistance = 0.99f; //amount of slow-down
     private RectF bounds;   // Needed for Canvas.drawOval
     private Paint paint;    // The paint style, color used for drawing
+
+    private Bitmap bitmap;
 
     // Add accelerometer
     // Add ... implements SensorEventListener
@@ -48,7 +54,9 @@ public class Ball {
     }
 
     // Constructor
-    public Ball(int color, float x, float y, float speedX, float speedY) {
+    public Ball(int color, float x, float y, float speedX, float speedY, Context context, int drawableResId) {
+
+        bitmap = BitmapFactory.decodeResource(context.getResources(), drawableResId);
         bounds = new RectF();
         paint = new Paint();
         paint.setColor(color);
@@ -94,7 +102,11 @@ public class Ball {
                 (float) (y - radius),
                 (float) (x + radius),
                 (float) (y + radius));
-        canvas.drawOval(bounds, paint);
+        canvas.drawBitmap(bitmap, null, bounds, null);
+    }
+
+    public RectF getBounds() {
+        return bounds;
     }
 
 }
