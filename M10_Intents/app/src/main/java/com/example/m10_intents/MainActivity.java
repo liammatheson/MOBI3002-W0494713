@@ -1,12 +1,15 @@
 package com.example.m10_intents;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.SeekBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,8 +70,16 @@ public class MainActivity extends AppCompatActivity {
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
         // adding option to choose from camera or camera roll on button press
+        // now have to add filepaths stuff to get the image to show in background
+
+        // creates file where camera will save photo
+        File photoFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),"myPhoto.jpg");
+        // uri wrapped in fileprovider allows for referencing file without exposing path. security
+        Uri photoUri = FileProvider.getUriForFile(this,"com.example.m10_intents.fileprovider", photoFile);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //tells camera intent where to save photo.
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
 
         Intent chooser = Intent.createChooser(galleryIntent, "Select an image or take a photo.");
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
@@ -89,20 +101,28 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         Log.w("MainActivity-INTENT", "onActivityResult-1 requestCode:" + requestCode + " resultCode:" + resultCode);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        Bitmap bitmap = null;
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK) {
 
-            Uri uri = data.getData();
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                Log.w("MainActivity-INTENT", "onActivityResult-2: " + String.valueOf(bitmap));
-
+            if (data != null && data.getData() != null) { // if data returns then bitmap is from the gallery. else it makes bitmap the camera file from sendmessage4
+                Uri uri = data.getData();
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    Log.w("MainActivity-INTENT", "onActivityResult-2: " + String.valueOf(bitmap));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                File photoFile = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myPhoto.jpg");
+                if (photoFile.exists()) {
+                    bitmap = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                    Log.w("MainActivity-INTENT", "Camera bitmap loaded: " + bitmap);
+                }
+            }
+            if (bitmap != null) {
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
-
 }
