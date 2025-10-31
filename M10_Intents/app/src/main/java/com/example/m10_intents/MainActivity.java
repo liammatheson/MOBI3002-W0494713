@@ -60,14 +60,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMessage4(View view) {
 
-        Intent intent = new Intent();
+        Intent galleryIntent = new Intent();
         // Show only images, no videos or anything else
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        // Always show the chooser (if there are multiple options available)
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+        // adding option to choose from camera or camera roll on button press
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent chooser = Intent.createChooser(galleryIntent, "Select an image or take a photo.");
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{cameraIntent});
+        // make new intent, put extra in it. extra cameraintent
+
+        startActivityForResult(chooser, PICK_IMAGE_REQUEST);
 
         Log.w("MainActivity-INTENT", "sendMessage4-2: ");
+
     }
 
 
