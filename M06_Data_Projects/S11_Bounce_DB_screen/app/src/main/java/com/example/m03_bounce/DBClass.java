@@ -45,6 +45,11 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // my new constructor. this is for testing db files that arent that hardcoded default one
+    public DBClass(Context context, String dbName) {
+        super(context, dbName, null, DATABASE_VERSION);
+    }
+
     @Override
     /**
      * This JavaDoc goes with this method type / * * and hit enter
@@ -140,5 +145,12 @@ public class DBClass extends SQLiteOpenHelper implements DB_Interface {
     public String getNameById(Long id) {
         return null;
     }
+
+    public void clearAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);
+        db.close();
+    }
+
 
 }

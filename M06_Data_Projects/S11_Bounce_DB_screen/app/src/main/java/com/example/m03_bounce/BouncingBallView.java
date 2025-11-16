@@ -18,7 +18,7 @@ import java.util.Random;
  */
 public class BouncingBallView extends View {
 
-    private ArrayList<Ball> balls = new ArrayList<Ball>(); // list of Balls
+    public ArrayList<Ball> balls = new ArrayList<Ball>(); // list of Balls
     private Ball ball_1;  // use this to reference first ball in arraylist
     private Box box;
 
@@ -100,11 +100,11 @@ public class BouncingBallView extends View {
         DBtest.save(newBall);
 
     }
-    public void clearBalls() {
-        balls.clear();
-        SQLiteDatabase db = DBtest.getWritableDatabase();
-        db.delete("sample_table", null, null); // deletes all rows
-        db.close();
-        invalidate();
-    }
+//    public void clearBalls() {
+//        balls.clear();
+//        SQLiteDatabase db = DBtest.getWritableDatabase();
+//        db.delete("sample_table", null, null); // deletes all rows
+//        db.close();
+//        invalidate();
+//    }
 }

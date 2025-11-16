@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     // bbView is our bouncing ball view
     private BouncingBallView bbView;
+    private DBClass dbclass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         // get the view object so we can reference it later
         bbView = (BouncingBallView) findViewById(R.id.custView);
+
+        dbclass = new DBClass(this);
     }
 
     // button action
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClearButtonPressed(View v) {
-        bbView.clearBalls();
+        dbclass.clearAll();
+        bbView.balls.clear();
+        bbView.invalidate();       // redraw empty view
     }
 }
